@@ -13,3 +13,7 @@ quote_type = single
 
 [*.json]
 insert_final_newline = false
+
+[*.yaml]
+indent_size = 2
+indent_style = space

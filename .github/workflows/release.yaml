@@ -1,0 +1,85 @@
+name: Post-OP media Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9].[0-9].[0-9]'
+      - 'v[0-9].[0-9].[0-9]-b'
+
+permissions:
+  contents: write
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Extract Version & Type
+        run: |
+          # Get the tag name
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "RELEASE_VERSION=$TAG_NAME" >> $GITHUB_ENV
+
+          # Determine if it's a pre-release or release
+          if [[ "$TAG_NAME" == *"-b"* ]]; then
+            echo "RELEASE_TYPE=Pre-release" >> $GITHUB_ENV
+          else
+            echo "RELEASE_TYPE=Release" >> $GITHUB_ENV
+          fi
+
+      - name: Update package.json Version
+        run: |
+          bun run ./scripts/update_version.ts ${{ github.ref_name }}
+          bun run format
+
+      - name: Update repository
+        if: ${{ !contains(github.ref, '-b') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if [ "$(git status --porcelain)" != "" ]; then
+            git add .
+            git commit -am 'chore(package): updated version to ${{ github.ref_name }}'
+            git push origin HEAD:${{ github.event.repository.default_branch }}
+          else
+            echo "No changes made to pacakge.json"
+          fi
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Build Executables
+        run: bun run build
+
+      - name: Prepare Bundles
+        run: |
+          # Windows
+          cp .env.template .env
+          zip -j postop-media-windows.zip dist/postop-media-windows.exe config.json .env
+
+          # Linux
+          zip -j postop-media-linux.zip dist/postop-media-linux config.json .env
+
+      - name: Create Release
+        uses: 'marvinpinto/action-automatic-releases@v1.2.1'
+        id: auto_release
+        with:
+          repo_token: '${{ secrets.GITHUB_TOKEN }}'
+          title: '${{ env.RELEASE_TYPE }}: ${{ env.RELEASE_VERSION }}'
+          prerelease: ${{ contains(github.ref, '-b') }}
+          files: |
+            postop-media-windows.zip
+            postop-media-linux.zip
+
+        env:
+          CI: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
