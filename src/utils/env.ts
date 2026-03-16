@@ -1,6 +1,6 @@
 import Logger from './logger';
 import { isDiscordTokenValid } from './utils';
-const logger = new Logger('CONFIG');
+const logger = new Logger('ENV');
 
 const fields = {
     DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN,
