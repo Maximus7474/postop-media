@@ -1,4 +1,4 @@
-import { GuildMember, MessageFlags, SlashCommandBuilder } from "discord.js";
+import { Colors, EmbedBuilder, GuildMember, MessageFlags, SlashCommandBuilder } from "discord.js";
 import SlashCommand from "../classes/slash_command";
 import { UploadHandler } from "../handlers/upload";
 
@@ -32,13 +32,31 @@ export default new SlashCommand({
 
             const uploadUrl = await Uploader.upload(fileBlob, attachment.name, member as GuildMember);
 
+            const embed = new EmbedBuilder()
+                .setTitle('✅ Post-OP media')
+                .setDescription('Shipment successful !')
+                .setFields({
+                    name: '🔗 **URL:**',
+                    value: `\`\`\`${uploadUrl}\`\`\``
+                })
+                .setColor(Colors.DarkGold)
+                .setImage(uploadUrl);
+
             await interaction.editReply({
-                content: `✅ **Post-OP:** Shipment successful!\n🔗 **URL:** ${uploadUrl}`
+                content: null,
+                embeds: [embed],
             });
 
         } catch (error) {
             logger.error("Failed to process upload:", error);
-            await interaction.editReply("💥 **Post-OP:** The delivery van crashed. (Internal Server Error)");
+            const embed = new EmbedBuilder()
+                .setTitle('💥 Post-OP media')
+                .setDescription('The delivery van crashed, please contact administrators.\n-# *(Internal Server Error)*')
+                .setColor(Colors.DarkRed);
+
+            await interaction.editReply({
+                embeds: [embed],
+            });
         }
     }
 });
