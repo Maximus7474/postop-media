@@ -36,7 +36,9 @@ try {
 	const configFile = Bun.file(configPath);
 
 	if (!(await configFile.exists())) {
-		logger.error(`Post-OP Error: Missing paperwork! Create a config.json at: ${configPath}`);
+		logger.error(
+			`Post-OP Error: Missing paperwork! Create a config.json at: ${configPath}`,
+		);
 		process.exit(1);
 	}
 

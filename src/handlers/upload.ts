@@ -7,7 +7,7 @@ import FivemanageUploader from './upload_methods/fivemanage';
 const logger = new Logger('UPLOAD');
 
 const UPLOAD_SERVICES: Record<string, new () => Uploader> = {
-    fivemanage: FivemanageUploader,
+	fivemanage: FivemanageUploader,
 };
 
 export class UploadHandler {
