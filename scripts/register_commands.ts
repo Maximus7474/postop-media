@@ -1,10 +1,6 @@
 import { REST, Routes, type RESTPostAPIChatInputApplicationCommandsJSONBody } from 'discord.js';
 import commandList from '../src/commands/index';
-
-if (!process.env.DISCORD_BOT_TOKEN) {
-    console.error('❌ Missing DISCORD_BOT_TOKEN in .env file.');
-    process.exit(1);
-}
+import env from '../src/utils/env';
 
 /**
  * Extracts the Client ID from the Bot Token
@@ -15,9 +11,9 @@ function getUserIdFromToken(token: string): string {
     return BigInt(decodedStr).toString();
 }
 
-const TOKEN = process.env.DISCORD_BOT_TOKEN;
+const TOKEN = env.DISCORD_BOT_TOKEN;
 const CLIENT_ID = getUserIdFromToken(TOKEN);
-const GUILD_ID = process.env.MAIN_GUILD_ID || null;
+const GUILD_ID = env.MAIN_GUILD_ID;
 
 const clearCommands = process.argv.includes('--clear-commands');
 
