@@ -6,34 +6,38 @@ import type { GuildMember } from 'discord.js';
 const logger = new Logger('UPLOAD');
 
 export class UploadHandler {
-    private uploader: Uploader | null = null;
-    private initializationPromise: Promise<void>;
+	private uploader: Uploader | null = null;
+	private initializationPromise: Promise<void>;
 
-    constructor() {
-        const { UploadMethod } = config;
+	constructor() {
+		const { UploadMethod } = config;
 
-        this.initializationPromise = this.loadUploader(UploadMethod);
-    }
+		this.initializationPromise = this.loadUploader(UploadMethod);
+	}
 
-    private async loadUploader(method: string) {
-        try {
-            const module = await import(`./upload_methods/${method}`);
-            
-            this.uploader = new module.default();
-            logger.info(`Service [${method}] is ready for media uploads.`);
-        } catch (err) {
-            logger.error(`Failed to load service [${method}]:`, err);
-            throw err;
-        }
-    }
+	private async loadUploader(method: string) {
+		try {
+			const module = await import(`./upload_methods/${method}`);
 
-    async upload(blob: Blob, fileName: string, member: GuildMember): Promise<string> {
-        await this.initializationPromise;
+			this.uploader = new module.default();
+			logger.info(`Service [${method}] is ready for media uploads.`);
+		} catch (err) {
+			logger.error(`Failed to load service [${method}]:`, err);
+			throw err;
+		}
+	}
 
-        if (!this.uploader) {
-            throw new Error("No uploader initialized. Post-OP Media is offline.");
-        }
+	async upload(
+		blob: Blob,
+		fileName: string,
+		member: GuildMember,
+	): Promise<string> {
+		await this.initializationPromise;
 
-        return await this.uploader.uploadBlob(blob, fileName, member);
-    }
+		if (!this.uploader) {
+			throw new Error('No uploader initialized. Post-OP Media is offline.');
+		}
+
+		return await this.uploader.uploadBlob(blob, fileName, member);
+	}
 }

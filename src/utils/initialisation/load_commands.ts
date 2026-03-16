@@ -6,20 +6,22 @@ const logger = new Logger('LoadCommands');
 import commands from '../../commands';
 
 export default (client: DiscordClient) => {
-    commands.forEach(async (command) => {
-        try {
-            const commandName = command.register().name;
+	commands.forEach(async (command) => {
+		try {
+			const commandName = command.register().name;
 
-            client.commands.set(commandName, command);
+			client.commands.set(commandName, command);
 
-            if (command.hasAutocomplete()) {
-                client.autocompleteCommands.set(commandName, command);
-            }
+			if (command.hasAutocomplete()) {
+				client.autocompleteCommands.set(commandName, command);
+			}
 
-            logger.success(`Loaded /${commandName}`);
-        } catch (error) {
-            console.error(`Failed to load command ${command.register().name}:`, error);
-        }
-    })
-}
-
+			logger.success(`Loaded /${commandName}`);
+		} catch (error) {
+			console.error(
+				`Failed to load command ${command.register().name}:`,
+				error,
+			);
+		}
+	});
+};

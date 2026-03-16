@@ -8,68 +8,80 @@ const logger = new Logger('FIVEMANAGE');
 const url = 'https://api.fivemanage.com/api/v3/file';
 
 interface FivemanageUploadResponse {
-    status: "ok" | string;
-    data: {
-        id: string;
-        url: string;
-    }
+	status: 'ok' | string;
+	data: {
+		id: string;
+		url: string;
+	};
 }
 
 export default class FivemanageUploader implements Uploader {
-    private getApiKey(mime: string): { apiKey: string, mimeType: 'image' | 'video' | 'other' } {
-        let apiKey: string | undefined;
-        let mimeType: 'image' | 'video' | 'other';
+	private getApiKey(mime: string): {
+		apiKey: string;
+		mimeType: 'image' | 'video' | 'other';
+	} {
+		let apiKey: string | undefined;
+		let mimeType: 'image' | 'video' | 'other';
 
-        if (mime.startsWith('image/')) {
-            apiKey = env.IMAGE_API_KEY;
-            mimeType = 'image';
-        } else if (mime.startsWith('video/')) {
-            apiKey = env.VIDEO_API_KEY;
-            mimeType = 'video';
-        } else {
-            apiKey = env.API_KEY;
-            mimeType = 'other';
-        }
+		if (mime.startsWith('image/')) {
+			apiKey = env.IMAGE_API_KEY;
+			mimeType = 'image';
+		} else if (mime.startsWith('video/')) {
+			apiKey = env.VIDEO_API_KEY;
+			mimeType = 'video';
+		} else {
+			apiKey = env.API_KEY;
+			mimeType = 'other';
+		}
 
-        if (!apiKey) throw new Error("No API key found for this delivery type!");
+		if (!apiKey) throw new Error('No API key found for this delivery type!');
 
-        return { apiKey, mimeType };
-    }
-    
-    async uploadBlob(blob: Blob, fileName: string, member: GuildMember): Promise<string> {
-        const { apiKey, mimeType } = this.getApiKey(blob.type);
+		return { apiKey, mimeType };
+	}
 
-        const formData = new FormData();
-        formData.append('file', blob, fileName);
-        
-        formData.append("metadata", JSON.stringify({
-            name: fileName,
-            description: ``,
-            source: 'Discord Bot'
-        }));
+	async uploadBlob(
+		blob: Blob,
+		fileName: string,
+		member: GuildMember,
+	): Promise<string> {
+		const { apiKey, mimeType } = this.getApiKey(blob.type);
 
-        formData.append("path", `postop-media/${mimeType}`);
+		const formData = new FormData();
+		formData.append('file', blob, fileName);
 
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Authorization': apiKey,
-                },
-                body: formData
-            });
+		formData.append(
+			'metadata',
+			JSON.stringify({
+				name: fileName,
+				description: ``,
+				source: 'Discord Bot',
+			}),
+		);
 
-            if (!response.ok) {
-                const errorBody = await response.text();
-                throw new Error(`FiveManage API Error (${response.status}): ${errorBody}`);
-            }
+		formData.append('path', `postop-media/${mimeType}`);
 
-            const data = (await response.json()) as FivemanageUploadResponse;
+		try {
+			const response = await fetch(url, {
+				method: 'POST',
+				headers: {
+					Authorization: apiKey,
+				},
+				body: formData,
+			});
 
-            return data.data.url; 
-        } catch (error) {
-            logger.error(`Upload failed for ${fileName}:`, error);
-            throw error;
-        }
-    }
+			if (!response.ok) {
+				const errorBody = await response.text();
+				throw new Error(
+					`FiveManage API Error (${response.status}): ${errorBody}`,
+				);
+			}
+
+			const data = (await response.json()) as FivemanageUploadResponse;
+
+			return data.data.url;
+		} catch (error) {
+			logger.error(`Upload failed for ${fileName}:`, error);
+			throw error;
+		}
+	}
 }
