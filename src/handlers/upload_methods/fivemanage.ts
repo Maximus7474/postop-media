@@ -7,6 +7,14 @@ const logger = new Logger('FIVEMANAGE');
 
 const url = 'https://api.fivemanage.com/api/v3/file';
 
+interface FivemanageUploadResponse {
+    status: "ok" | string;
+    data: {
+        id: string;
+        url: string;
+    }
+}
+
 export default class FivemanageUploader implements Uploader {
     private getApiKey(mime: string): { apiKey: string, mimeType: 'image' | 'video' | 'other' } {
         let apiKey: string | undefined;
@@ -56,9 +64,9 @@ export default class FivemanageUploader implements Uploader {
                 throw new Error(`FiveManage API Error (${response.status}): ${errorBody}`);
             }
 
-            const data = (await response.json()) as { id: string; url: string;};
+            const data = (await response.json()) as FivemanageUploadResponse;
 
-            return data.url; 
+            return data.data.url; 
         } catch (error) {
             logger.error(`Upload failed for ${fileName}:`, error);
             throw error;
