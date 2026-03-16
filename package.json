@@ -1,24 +1,26 @@
 {
-  "name": "postop-media",
-  "module": "index.ts",
-  "version": "0.1.0",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "dev": "bun run --watch src/index.ts",
-    "deploy": "bun scripts/register_commands.ts",
-    "typecheck": "tsc --noEmit",
-    "build": "bun run scripts/build.ts"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "dependencies": {
-    "colors": "^1.4.0",
-    "discord.js": "^14.25.1",
-    "zod": "^4.3.6"
-  }
+	"name": "postop-media",
+	"module": "index.ts",
+	"version": "0.1.0",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"dev": "bun run --watch src/index.ts",
+		"deploy": "bun scripts/register_commands.ts",
+		"format": "bunx --bun @biomejs/biome format --write",
+		"typecheck": "tsc --noEmit",
+		"build": "bun run scripts/build.ts"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.7",
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"colors": "^1.4.0",
+		"discord.js": "^14.25.1",
+		"zod": "^4.3.6"
+	}
 }
