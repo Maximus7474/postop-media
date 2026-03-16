@@ -17,7 +17,7 @@ export class UploadHandler {
 
     private async loadUploader(method: string) {
         try {
-            const module = await import(`./providers/${method}`);
+            const module = await import(`./upload_methods/${method}`);
             
             this.uploader = new module.default();
             logger.info(`Service [${method}] is ready for media uploads.`);
