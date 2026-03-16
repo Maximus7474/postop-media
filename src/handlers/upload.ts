@@ -2,8 +2,13 @@ import config from '../utils/config';
 import Logger from '../utils/logger';
 import type { Uploader } from '../types/uploader';
 import type { GuildMember } from 'discord.js';
+import FivemanageUploader from './upload_methods/fivemanage';
 
 const logger = new Logger('UPLOAD');
+
+const UPLOAD_SERVICES: Record<string, new () => Uploader> = {
+    fivemanage: FivemanageUploader,
+};
 
 export class UploadHandler {
 	private uploader: Uploader | null = null;
@@ -17,9 +22,13 @@ export class UploadHandler {
 
 	private async loadUploader(method: string) {
 		try {
-			const module = await import(`./upload_methods/${method}`);
+			const ServiceClass = UPLOAD_SERVICES[method.toLowerCase()];
 
-			this.uploader = new module.default();
+			if (!ServiceClass) {
+				throw new Error(`No handler was found for`);
+			}
+
+			this.uploader = new ServiceClass();
 			logger.info(`Service [${method}] is ready for media uploads.`);
 		} catch (err) {
 			logger.error(`Failed to load service [${method}]:`, err);
