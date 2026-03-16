@@ -2,6 +2,7 @@ import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 
 import type { DiscordClient } from './types';
 
+import './utils/config';
 import env from './utils/env';
 
 import LoadCommands from './utils/initialisation/load_commands';
