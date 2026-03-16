@@ -12,7 +12,7 @@ interface Config {
     MAIN_GUILD_ID: string|false;
 };
 
-if (!fields.DISCORD_BOT_TOKEN) {
+if (!fields.DISCORD_BOT_TOKEN || !(await isDiscordTokenValid(fields.DISCORD_BOT_TOKEN))) {
     throw new Error('No Discord Token was provided in the environment variables, make sure it\'s set under "DISCORD_BOT_TOKEN"')
 }
 
