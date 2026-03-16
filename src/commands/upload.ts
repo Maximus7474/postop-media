@@ -1,4 +1,4 @@
-import { GuildMember, SlashCommandBuilder } from "discord.js";
+import { GuildMember, MessageFlags, SlashCommandBuilder } from "discord.js";
 import SlashCommand from "../classes/slash_command";
 import { UploadHandler } from "../handlers/upload";
 
@@ -22,7 +22,7 @@ export default new SlashCommand({
             return;
         } 
 
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         
         const attachment = interaction.options.getAttachment('file', true);
 
