@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import RawConfig from '../../config.json' with { type: 'json' };
+import { join } from 'path';
 import Logger from './logger';
 const logger = new Logger('CONFIG');
 
@@ -28,6 +28,24 @@ const ConfigSchema = z
 	});
 
 export type AppConfig = z.infer<typeof ConfigSchema>;
+
+const configPath = join(process.cwd(), 'config.json');
+
+let RawConfig: any;
+
+try {
+	const configFile = Bun.file(configPath);
+
+	if (!(await configFile.exists())) {
+		logger.error(`Post-OP Error: Missing paperwork! Create a config.json at: ${configPath}`);
+		process.exit(1);
+	}
+
+	RawConfig = await configFile.json();
+} catch (err) {
+	logger.error('Failed to read config.json from disk:', err);
+	process.exit(1);
+}
 
 export function getValidatedConfig(): AppConfig {
 	const parse = ConfigSchema.safeParse(RawConfig);
