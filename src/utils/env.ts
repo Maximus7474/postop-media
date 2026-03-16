@@ -1,4 +1,5 @@
 import Logger from './logger';
+import { isDiscordTokenValid } from './utils';
 const logger = new Logger('CONFIG');
 
 const fields = {
