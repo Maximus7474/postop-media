@@ -64,10 +64,10 @@ jobs:
         run: |
           # Windows
           cp .env.template .env
-          zip -j postop-media-windows.zip dist/postop-media-windows.exe config.json .env README.md
+          zip -j postop-media-windows.zip dist/postop-media-windows.exe config.json .env README.md LICENSE
 
           # Linux
-          zip -j postop-media-linux.zip dist/postop-media-linux config.json .env README.md
+          zip -j postop-media-linux.zip dist/postop-media-linux config.json .env README.md LICENSE
 
       - name: Create Release
         uses: 'marvinpinto/action-automatic-releases@v1.2.1'
