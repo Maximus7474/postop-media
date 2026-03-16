@@ -1,12 +1,14 @@
 {
   "name": "postop-media",
   "module": "index.ts",
+  "version": "0.1.0",
   "type": "module",
   "private": true,
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "deploy": "bun scripts/register_commands.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build": "bun run scripts/build.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
