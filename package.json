@@ -1,0 +1,20 @@
+{
+  "name": "postop-media",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "discord.js": "^14.25.1"
+  }
+}
