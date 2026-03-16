@@ -5,8 +5,9 @@ const logger = new Logger('CONFIG');
 
 const CustomUploadSchema = z.object({
 	method: z.enum(['POST', 'PUT', 'PATCH']),
-	endpoint: z
-		.url({ message: 'Post-OP requires a valid URL for custom drop-offs.' }),
+	endpoint: z.url({
+		message: 'Post-OP requires a valid URL for custom drop-offs.',
+	}),
 	headers: z.record(z.string(), z.string()).optional(),
 });
 
