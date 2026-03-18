@@ -59,23 +59,42 @@ This is the default configuration. Use this if you are using FiveManage as your 
 
 Use this if you are pointing the bot to your own private storage server or a third-party API. Note that `CustomUpload` is **mandatory** if the method is set to `custom`.
 
-> [!NOTE]
-> While the schema exists, custom endpoint logic is currently being implemented. We are open to suggestions regarding requirements or other supported upload services.
-
 ```json
 {
   "UploadMethod": "custom",
   "CustomUpload": {
     "method": "POST",
     "endpoint": "https://your-media-server.com/api/upload",
+    "path": "data.url",
     "headers": {
-      "Authorization": "Bearer YOUR_SECRET_TOKEN",
-      "X-Custom-Header": "PostOp-Media-Bot"
+      "Authorization": "Bearer YOUR_SECRET_TOKEN"
     }
   }
 }
 
 ```
+
+###### Request Details
+
+When using the custom uploader, the bot sends a **Multipart Form-Data** request. In addition to any custom headers you define in the config, the bot automatically includes the following data:
+
+**1. Form Data Fields**
+* `file`: The actual binary file (Blob).
+* `metadata`: A JSON string containing:
+    * `name`: The original file name.
+    * `uploadedBy`: The display name and ID of the Discord member (e.g., `JohnDoe (johndoe - 123456789)`).
+    * `source`: Always set to `Post-OP Media - Discord Bot`.
+
+**2. Automatic Headers**
+The bot appends these headers to every request for easier server-side logging:
+* `X-Member-ID`: The Discord Snowflake ID of the user.
+* `X-Upload-Source`: `Post-OP Media - Discord Bot`.
+
+**3. Response Handling**
+The `path` property in your config tells the bot where to find the resulting file link in your server's JSON response. For example, if your server returns `{ "data": { "url": "..." } }`, set your path to `data.url`.
+
+> [!NOTE]
+> **Developer Reference:** To see exactly how the bot constructs the `FormData` and resolves the JSON response, check the source code: [`custom.ts`](./src/handlers/upload_methods/custom.ts).
 
 ---
 
