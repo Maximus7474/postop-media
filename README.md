@@ -1,5 +1,9 @@
 # Post-OP Media
 
+  ![](https://img.shields.io/github/downloads/Maximus7474/postop-media/total?logo=github)
+  ![](https://img.shields.io/github/v/release/Maximus7474/postop-media?logo=github)
+  ![](https://img.shields.io/github/downloads/Maximus7474/postop-media/total?logo=github)
+
 **postop-media** is a high-performance Discord bot designed to bridge the gap between players and file servers. It allows users to upload media directly to a CDN via slash commands, ensuring a seamless experience for community-driven content.
 
 Currently, the project natively supports [FiveManage](https://fivemanage.com), with custom endpoint support in active development.
