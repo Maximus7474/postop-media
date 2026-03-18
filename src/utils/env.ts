@@ -47,7 +47,9 @@ if (config.UploadMethod !== 'custom') {
 	validateKey(fields.IMAGE_API_KEY, 'IMAGE');
 	validateKey(fields.VIDEO_API_KEY, 'VIDEO');
 } else {
-	logger.info('Skipping API_KEY validation as upload method is set to "custom"');
+	logger.info(
+		'Skipping API_KEY validation as upload method is set to "custom"',
+	);
 }
 
 const env: Env = {
