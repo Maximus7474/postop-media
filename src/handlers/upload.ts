@@ -2,12 +2,15 @@ import config from '../utils/config';
 import Logger from '../utils/logger';
 import type { Uploader } from '../types/uploader';
 import type { GuildMember } from 'discord.js';
+
 import FivemanageUploader from './upload_methods/fivemanage';
+import CustomUploader from './upload_methods/custom';
 
 const logger = new Logger('UPLOAD');
 
 const UPLOAD_SERVICES: Record<string, new () => Uploader> = {
 	fivemanage: FivemanageUploader,
+	custom: CustomUploader,
 };
 
 export class UploadHandler {
