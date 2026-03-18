@@ -53,8 +53,8 @@ export default class FivemanageUploader implements Uploader {
 			'metadata',
 			JSON.stringify({
 				name: fileName,
-				description: ``,
-				source: 'Discord Bot',
+				uploadedBy: `${member.displayName} (${member.user.username} - ${member.user.id})`,
+				source: 'Post-OP Media - Discord Bot',
 			}),
 		);
 
