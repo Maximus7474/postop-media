@@ -1,5 +1,6 @@
-import Logger from './logger';
 import { isDiscordTokenValid } from './utils';
+import Logger from './logger';
+import config from './config';
 const logger = new Logger('ENV');
 
 const fields = {
@@ -42,8 +43,12 @@ const validateKey = (key: string | undefined, name: string) => {
 		logger.warn(`No ${name}_API_KEY detected; falling back to global API_KEY.`);
 };
 
-validateKey(fields.IMAGE_API_KEY, 'IMAGE');
-validateKey(fields.VIDEO_API_KEY, 'VIDEO');
+if (config.UploadMethod !== 'custom') {
+	validateKey(fields.IMAGE_API_KEY, 'IMAGE');
+	validateKey(fields.VIDEO_API_KEY, 'VIDEO');
+} else {
+	logger.info('Skipping API_KEY validation as upload method is set to "custom"');
+}
 
 const env: Env = {
 	DISCORD_BOT_TOKEN: fields.DISCORD_BOT_TOKEN,
