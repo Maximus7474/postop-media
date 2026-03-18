@@ -9,7 +9,12 @@ const CustomUploadSchema = z.object({
 		message: 'Post-OP requires a valid URL for custom drop-offs.',
 	}),
 	headers: z.record(z.string(), z.string()).optional(),
+	path: z
+		.string()
+		.min(1, 'A response path is required to locate the file URL.'),
 });
+
+export type CustomUploadConfig = z.infer<typeof CustomUploadSchema>;
 
 const ConfigSchema = z
 	.object({
