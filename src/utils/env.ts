@@ -12,7 +12,10 @@ const fields = {
 	VIDEO_API_KEY: process.env.VIDEO_API_KEY,
 };
 
-export type VERSIONTYPE = `${string}.${string}.${string}` | `${string}.${string}.${string}-b` | 'dev-build';
+export type VERSIONTYPE =
+	| `${string}.${string}.${string}`
+	| `${string}.${string}.${string}-b`
+	| 'dev-build';
 
 interface Env {
 	DISCORD_BOT_TOKEN: string;
