@@ -8,6 +8,9 @@ import env from './utils/env';
 import LoadCommands from './utils/initialisation/load_commands';
 import LoadEvents from './utils/initialisation/load_events';
 import LoadStaticMessages from './utils/initialisation/load_static_messages';
+import { checkVersion } from './utils/version_check';
+
+checkVersion(env.VERSION);
 
 const client: DiscordClient = new Client({
 	intents: [

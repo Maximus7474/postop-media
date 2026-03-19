@@ -6,14 +6,18 @@ const logger = new Logger('ENV');
 const fields = {
 	DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN,
 	MAIN_GUILD_ID: process.env.MAIN_GUILD_ID,
+	VERSION: process.env.VERSION,
 	API_KEY: process.env.API_KEY,
 	IMAGE_API_KEY: process.env.IMAGE_API_KEY,
 	VIDEO_API_KEY: process.env.VIDEO_API_KEY,
 };
 
+export type VERSIONTYPE = `${string}.${string}.${string}` | `${string}.${string}.${string}-b` | 'dev-build';
+
 interface Env {
 	DISCORD_BOT_TOKEN: string;
 	MAIN_GUILD_ID: string | false;
+	VERSION: VERSIONTYPE;
 	API_KEY: string | undefined;
 	IMAGE_API_KEY: string | undefined;
 	VIDEO_API_KEY: string | undefined;
@@ -55,6 +59,7 @@ if (config.UploadMethod !== 'custom') {
 const env: Env = {
 	DISCORD_BOT_TOKEN: fields.DISCORD_BOT_TOKEN,
 	MAIN_GUILD_ID: fields.MAIN_GUILD_ID ?? false,
+	VERSION: (fields.VERSION as VERSIONTYPE | undefined) ?? 'dev-build',
 	API_KEY: fields.API_KEY,
 	IMAGE_API_KEY: fields.IMAGE_API_KEY ?? fields.API_KEY,
 	VIDEO_API_KEY: fields.VIDEO_API_KEY ?? fields.API_KEY,
